@@ -1,4 +1,4 @@
-NAME = animals
+NAME = materia
 SRCS =	main.cpp\
 		Classes.cpp
 
@@ -23,4 +23,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re animals
+.PHONY: all clean fclean re materia
