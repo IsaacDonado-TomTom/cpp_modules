@@ -1,6 +1,9 @@
 NAME = animals
 SRCS =	main.cpp\
-		Classes.cpp
+		Animal.cpp\
+		Dog.cpp\
+		Cat.cpp\
+		Brain.cpp
 
 HDRS = -I includes/
 CPP_VERSION=-std=c++98

@@ -1,5 +1,7 @@
-#include <Classes.hpp>
-#include <WrongClasses.hpp>
+#include <Dog.hpp>
+#include <Cat.hpp>
+#include <WrongDog.hpp>
+#include <WrongCat.hpp>
 
 int main(void)
 {
@@ -24,5 +26,6 @@ int main(void)
     i_two->makeSound();
     j_two->makeSound();
     meta_two->makeSound();
+    delete meta_two;delete j_two;delete i_two;
     return (0);
 }

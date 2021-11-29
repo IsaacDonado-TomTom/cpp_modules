@@ -1,4 +1,5 @@
-#include <Classes.hpp>
+#include <Dog.hpp>
+#include <Cat.hpp>
 
 int main(void)
 {
@@ -6,10 +7,10 @@ int main(void)
     const Animal* rob = new Cat();
 
     bob->get_brain()->setIdea(3, "Random");
-    const Dog* kelly = new Dog(*bob);
+    //const Dog* kelly = new Dog(*bob);
 
-    std::cout << *bob->get_brain() << std::endl;
-    std::cout << *kelly->get_brain() << std::endl;
+    //std::cout << *bob->get_brain() << std::endl;
+    //std::cout << *kelly->get_brain() << std::endl;
 
     delete bob;//should not create a leak
     delete rob;
