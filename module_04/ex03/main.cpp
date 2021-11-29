@@ -1,4 +1,7 @@
-#include <Classes.hpp>
+#include <MateriaSource.hpp>
+#include <Ice.hpp>
+#include <Cure.hpp>
+#include <Character.hpp>
  
  void   main_test()
  {
@@ -180,15 +183,15 @@ int main(void)
 {
     main_test();
 
-    //materia_not_yet_learned();
+    materia_not_yet_learned();
 
-    //unequiped_materias();
+    unequiped_materias();
 
-    //unequip_does_not_delete();
+    unequip_does_not_delete();
 
-    //assign_and_copy_characters();
+    assign_and_copy_characters();
 
-    //using_materias();
+    using_materias();
 
     return (0);
 }

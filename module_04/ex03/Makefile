@@ -1,6 +1,10 @@
 NAME = materia
 SRCS =	main.cpp\
-		Classes.cpp
+		MateriaSource.cpp\
+		AMateria.cpp\
+		Ice.cpp\
+		Cure.cpp\
+		Character.cpp
 
 HDRS = -I includes/
 CPP_VERSION=-std=c++98
