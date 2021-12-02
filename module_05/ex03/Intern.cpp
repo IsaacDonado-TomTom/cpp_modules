@@ -19,6 +19,12 @@ Intern::~Intern()
 Intern::Intern(const Intern& src)
 {
     (void)src;
+    this->forms[0].name = "ShrubberyCreationForm";
+    this->forms[1].name = "RobotomyRequestForm";
+    this->forms[2].name = "PresidentialPardonForm";
+    this->forms[0].f = &Intern::Shrubbery;
+    this->forms[1].f = &Intern::Robotomy;
+    this->forms[2].f = &Intern::Presidential;
     std::cout << "Intern(Intern&) copy constructor called." << std::endl;
 }
 
