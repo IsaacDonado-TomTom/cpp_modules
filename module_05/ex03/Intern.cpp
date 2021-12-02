@@ -2,6 +2,12 @@
 
 Intern::Intern()
 {
+    this->forms[0].name = "ShrubberyCreationForm";
+    this->forms[1].name = "RobotomyRequestForm";
+    this->forms[2].name = "PresidentialPardonForm";
+    this->forms[0].f = &Intern::Shrubbery;
+    this->forms[1].f = &Intern::Robotomy;
+    this->forms[2].f = &Intern::Presidential;
     std::cout << "Intern() constructor called." << std::endl;
 }
 
@@ -25,24 +31,29 @@ Intern& Intern::operator=(const Intern& rhs)
 
 Form*   Intern::makeForm(const std::string& formName, const std::string& target)
 {
-    std::string formPool[3];
-    formPool[0] = "ShrubberyCreationForm";
-    formPool[1] = "RobotomyRequestForm";
-    formPool[2] = "PresidentialPardonForm";
-    Form*   funcPool[3];
-    funcPool[0] = new ShrubberyCreationForm(target);
-    funcPool[1] = new RobotomyRequestForm(target);
-    funcPool[2] = new PresidentialPardonForm(target);
-    bool found = false;
     for (int i = 0;i < 3; ++i)
     {
-        if (!(formPool[i].compare(formName)))
+        if (!(this->forms[i].name.compare(formName)))
         {
             std::cout << "\033[32m Form[" << formName << "] created.\033[39m" << std::endl;
-            return (funcPool[i]);
+            return (this->*(this->forms[i].f))(target);
         }
     }
-    if (found == false)
-        std::cout << "\033[31m Form[" << target << "] is not available.\033[39m" << std::endl;
+        std::cout << "\033[31m Form[" << formName << "] is not available.\033[39m" << std::endl;
     return (NULL);
+}
+
+Form *Intern::Shrubbery(std::string target)
+{
+    return new ShrubberyCreationForm(target);
+}
+
+Form *Intern::Presidential(std::string target)
+{
+    return new PresidentialPardonForm(target);
+}
+
+Form *Intern::Robotomy(std::string target)
+{
+    return new RobotomyRequestForm(target);
 }
