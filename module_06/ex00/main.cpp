@@ -1,15 +1,5 @@
 #include <Convert.hpp>
 
-void    convertChar(Convert* converter)
-{
-    return ;
-}
-
-void    convertInt(Convert* converter)
-{
-    return ;
-}
-
 int main(int argc, char** argv)
 {
     if (argc != 2)
@@ -27,11 +17,7 @@ int main(int argc, char** argv)
     }
 
     converter->setValue();
-
-    if (converter->getType(1) == CHAR)
-        convertChar(converter);
-    else if (converter->getType(1) == INT)
-        convertInt(converter);
+    std::cout << *converter;
 
     delete converter;
     return (0);

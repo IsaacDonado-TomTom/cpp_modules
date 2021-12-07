@@ -9,12 +9,16 @@ Convert::Convert(const std::string& input) : _input(input)
 {
     
     this->getType();
-    this->_fail = false;
+    this->_failDouble = false;
+    this->_failFloat = false;
+    this->_failInt = false;
+    this->_failChar = false;
     return ;
 }
 
 Convert::~Convert()
 {
+    exit (0);
     return ;
 }
 
@@ -125,26 +129,77 @@ std::string Convert::getInput() const
 void    Convert::setValue()
 {
     if (this->_type == CHAR)
+    {
         this->_valueChar = this->_input[0];
-    else if (this->_type == INT)
+        this->_valueFloat = static_cast<float>(this->_input[0]);
+        this->_valueDouble = static_cast<double>(this->_input[0]);
+        this->_valueInt = static_cast<int>(this->_input[0]);
+    }
+    else
     {
         try
-            {this->_valueInt = std::stoi(this->_input, NULL, 10);}
-        catch (std::exception& e)
-            {this->_fail = true;}
-    }
-    else if (this->_type == FLOAT)
-    {
+        {
+            this->_valueDouble = std::stod(this->_input);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "ERROR: invalid input." << std::endl;
+            this->~Convert();
+        }
+
         try
-            {this->_valueFloat = std::stof(this->_input);}
-        catch (std::exception& e)
-            {this->_fail = true;}
-    }
-    else if (this->_type == DOUBLE)
-    {
+        {
+            this->_valueFloat = std::stof(this->_input);
+        }
+        catch(const std::exception& e)
+        {
+            this->_failFloat = true;
+        }
+
         try
-            {this->_valueDouble = std::stod(this->_input);}
+        {
+            this->_valueInt = std::stoi(this->_input, NULL, 10);
+            if (this->_valueDouble - _valueInt >= 0.5 && this->_valueInt < std::numeric_limits<int>::max())
+                this->_valueInt = this->_valueInt + 1;
+            if (this->_valueDouble - _valueInt >= 0.5 && this->_valueInt == std::numeric_limits<int>::max())
+                this->_failInt = true;
+        }
         catch (std::exception& e)
-            {this->_fail = true;}
+        {
+            this->_failInt = true;
+        }
+
+        if (this->_failInt == true)
+            this->_failChar = true;
+        else if (this->_valueInt >= std::numeric_limits<char>::min() && this->_valueInt <= std::numeric_limits<char>::max())
+            this->_valueChar = static_cast<char>(this->_valueInt);
+        else
+            this->_failChar = true;
     }
+    
 }
+
+
+std::ostream&   operator<<(std::ostream& output, Convert& converter)
+{
+    if (isprint(converter._valueChar))
+        output << "char: '" << converter._valueChar << "'" << std::endl;
+    else if (isnan(converter._valueFloat) || converter._failChar == true)
+        output << "char: impossible" << std::endl;
+    else
+        output << "char: Non displayable" <<std::endl;
+
+    if (isnan(converter._valueFloat) || converter._failInt == true)
+        output << "int: impossible" << std::endl;
+    else
+        output << "int: " << converter._valueInt  << std::endl;
+    std::cout << std::fixed << std::setprecision(1);
+
+    if (converter._failFloat == true)
+        output << "float: impossible" << std::endl;
+    else
+        output << "float: " << converter._valueFloat << "f" << std::endl;
+    output << "double: " << converter._valueDouble << std::endl;
+    return (output);
+}
+

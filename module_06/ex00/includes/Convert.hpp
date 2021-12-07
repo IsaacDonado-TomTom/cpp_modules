@@ -2,7 +2,9 @@
 # define CONVERT_HPP
 
 # include <iostream>
-
+# include <limits>
+# include <iomanip>
+# include <cmath>
 # define ERROR 0
 # define CHAR 1
 # define INT 2
@@ -15,11 +17,6 @@ class Convert
     private:
         const std::string   _input;
         int                 _type;
-        char                _valueChar;
-        int                 _valueInt;
-        float               _valueFloat;
-        double              _valueDouble;
-        bool                _fail;
 
         Convert();
         Convert(const Convert& src);
@@ -35,6 +32,18 @@ class Convert
         bool        isInt(const std::string& str);
         bool        isFloat(const std::string& str);
         bool        isDouble(const std::string& str);
+
+
+        char                _valueChar;
+        int                 _valueInt;
+        float               _valueFloat;
+        double              _valueDouble;
+        bool                _failInt;
+        bool                _failDouble;
+        bool                _failFloat;
+        bool                _failChar;
 };
+
+std::ostream&   operator<<(std::ostream& output, Convert& converter);
 
 #endif
