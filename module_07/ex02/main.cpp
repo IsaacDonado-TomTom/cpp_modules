@@ -57,7 +57,8 @@ int main(void)
     Array<int> arr_ints(5);
     for (i = 0;i < arr_ints.size(); i++)
         arr_ints[i] = 42 + i;
-    Array<int> arr_ints_copy = arr_ints;
+    Array<int> arr_ints_copy;
+    arr_ints_copy = arr_ints;
     std::cout << std::endl << "displaying original." << std::endl;
     for (i = 0;i < arr_ints.size(); i++)
         std::cout << "arr_ints[" << i << "]: " << arr_ints[i] <<  " - Address: " << &arr_ints[i] << "... ";

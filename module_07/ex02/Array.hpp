@@ -44,10 +44,13 @@ Array<T>::Array(const Array& src)
 template< typename T >
 Array<T>&  Array<T>::operator=(const Array& rhs)
 {
-    if (this == &rhs)
+    if (this != &rhs)
     {
-        Array* temp = new Array(rhs);
-        return (*temp);
+        delete this->_array;
+        this->_array = new T[rhs.size()];
+        this->_size = rhs.size();
+        for (unsigned int i = 0; i< this->_size ; i++)
+            this->_array[i] = rhs._array[i];
     }
     return (*this);
 }
