@@ -21,7 +21,7 @@ class Array
 template< typename T >
 Array<T>::Array(void)
 {
-    this->_array = NULL;
+    this->_array = new T[0]();
     this->_size = 0;
 }
 
@@ -46,7 +46,7 @@ Array<T>&  Array<T>::operator=(const Array& rhs)
 {
     if (this != &rhs)
     {
-        delete this->_array;
+        delete [] this->_array;
         this->_array = new T[rhs.size()];
         this->_size = rhs.size();
         for (unsigned int i = 0; i< this->_size ; i++)
@@ -58,8 +58,7 @@ Array<T>&  Array<T>::operator=(const Array& rhs)
 template< typename T >
 Array<T>::~Array(void)
 {
-    if (this->_array != NULL)
-        delete [] this->_array;
+    delete [] this->_array;
 }
 
 template< typename T >

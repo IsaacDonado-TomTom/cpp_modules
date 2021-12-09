@@ -6,16 +6,7 @@ template<typename T>
 void    iter(T* array, size_t size, void (*f)(const T& item))
 {
     for (size_t i = 0; i < size; i++)
-    {
-        try
-        {
-            f(array[i]);
-        }
-        catch (std::exception& e)
-        {
-            std::cout << "Array out of bounds" << std::endl;
-        }
-    }
+        f(array[i]);
 }
 
 template<typename T>

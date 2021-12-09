@@ -47,12 +47,9 @@ void    string_arr(void)
     std::cout << "size(): " << arr_strings.size() << std::endl;
 }
 
-int main(void)
+void    copy_operator()
 {
-    int_arr();
-    string_arr();
-
-    std::cout << std::endl << "Creating an array, copying to another." << std::endl;
+    std::cout << std::endl << "Creating an array, copying to another by assignment operator." << std::endl;
     unsigned int i;
     Array<int> arr_ints(5);
     for (i = 0;i < arr_ints.size(); i++)
@@ -66,15 +63,18 @@ int main(void)
     for (i = 0;i < arr_ints_copy.size(); i++)
         std::cout << "arr_ints_copy[" << i << "]: " << arr_ints_copy[i] <<  " - Address: " << &arr_ints_copy[i] << "... ";
     std::cout << std::endl;
+}
 
-
+void    copy_constructor()
+{
+    unsigned int i;
+    std::cout << std::endl << "Creating an array of strings, copying to another by copy contructor." << std::endl;
     Array<std::string> arr_strings(5);
     for (i = 0;i < arr_strings.size(); i++)
     {
         arr_strings[i] = "Blank";
         arr_strings[i][0] = arr_strings[i][0] + i;
     }
-    std::cout << std::endl << "Creating an array of strings, copying to another by copy contructor." << std::endl;
     Array<std::string> arr_strings_copy(arr_strings);
     std::cout << std::endl << "displaying original." << std::endl;
     for (i = 0;i < arr_strings.size(); i++)
@@ -83,5 +83,13 @@ int main(void)
     for (i = 0;i < arr_strings_copy.size(); i++)
         std::cout << "arr_strings_copy[" << i << ": " << arr_strings_copy[i] <<  " - Address: " << &arr_strings_copy[i] << "... ";
     std::cout << std::endl;
+}
+
+int main(void)
+{
+    int_arr();
+    string_arr();
+    copy_operator();
+    copy_constructor();
     return (0);
 }
