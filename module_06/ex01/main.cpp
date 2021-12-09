@@ -49,6 +49,8 @@ int main(void)
 
     if (one == two)
         std::cout << "Successfully pointing to the same address using serialize." << std::endl;
+    
+    delete one;
 
     return (0);
 }

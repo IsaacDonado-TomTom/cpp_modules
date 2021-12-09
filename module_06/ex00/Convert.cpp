@@ -8,11 +8,12 @@ Convert::Convert()
 Convert::Convert(const std::string& input) : _input(input)
 {
     
-    this->getType();
     this->_failDouble = false;
     this->_failFloat = false;
     this->_failInt = false;
     this->_failChar = false;
+    this->error_num = 0;
+    this->getType();
     return ;
 }
 
@@ -34,13 +35,35 @@ Convert&    Convert::operator=(const Convert &rhs)
     return (const_cast<Convert&>(rhs));
 }
 
+char    Convert::getChar(void) { return(this->_valueChar); }
+
+int    Convert::getInt(void) { return(this->_valueInt); }
+
+float    Convert::getFloat(void) { return(this->_valueFloat); }
+
+double    Convert::getDouble(void) { return(this->_valueDouble); }
+
+bool    Convert::isFail(const std::string& type)
+{
+    if (type == "int")
+        return(this->_failInt);
+    else if (type == "double")
+        return(this->_failDouble);
+    else if (type == "float")
+        return(this->_failFloat);
+    else if (type == "char")
+        return(this->_failChar);
+    else
+        return false;
+}
+
 bool    Convert::isInt(const std::string& str)
 {
     for (size_t i = 0 ; i < str.length(); i++)
     {
-        if (str[0] == '-')
+        if (str[0] == '-' && i == 0)
             continue;
-        if (str[i] < '0' || str[i] > '9')
+        if (!isdigit(str[i]))
             return (false);
     }
     return (true);
@@ -64,7 +87,10 @@ bool    Convert::isFloat(const std::string& str)
         else
         {
             if (i == str.length() - 1 && str[i] == 'f')
+            {
+                res = true;
                 i++;
+            }
             else
                 return (false);
         }
@@ -103,7 +129,7 @@ void    Convert::getType()
     std::string str = this->_input;
     if (str == "inf" || str == "inff" || str == "+inf" || str == "+inff" || str == "-inf" || str == "-inff" || str == "nan" || str == "nanf")
         {this->_type = OTHER; return ;}
-    if (str.length() == 1 && !isdigit(str[0]))
+    if (str.length() == 1 && !isdigit(str[0])&& str[0] >= std::numeric_limits<char>::min() && str[0] <= std::numeric_limits<char>::max())
         {this->_type = CHAR; return ;}
     if (this->isInt(str) == true)
         {this->_type = INT; return ;}
@@ -111,14 +137,8 @@ void    Convert::getType()
         {this->_type = FLOAT; return ;}
     if (this->isDouble(str) == true)
         {this->_type = DOUBLE; return ;}
+    this->error_num = -1;
     this->_type = ERROR; return ;
-}
-
-int    Convert::getType(int x) const
-{
-    
-    (void)x;
-    return (this->_type);
 }
 
 std::string Convert::getInput() const
@@ -128,9 +148,11 @@ std::string Convert::getInput() const
 
 void    Convert::setValue()
 {
+    double whole;
+    double decimals;
     if (this->_type == CHAR)
     {
-        this->_valueChar = this->_input[0];
+        this->_valueChar = static_cast<char>(this->_input[0]);
         this->_valueFloat = static_cast<float>(this->_input[0]);
         this->_valueDouble = static_cast<double>(this->_input[0]);
         this->_valueInt = static_cast<int>(this->_input[0]);
@@ -144,12 +166,16 @@ void    Convert::setValue()
         catch(const std::exception& e)
         {
             std::cerr << "ERROR: invalid input." << std::endl;
-            this->~Convert();
+            this->error_num = -1;
+            return ;
         }
 
         try
         {
-            this->_valueFloat = std::stof(this->_input);
+            if ((this->_valueDouble > std::numeric_limits<float>::max() || this->_valueDouble < std::numeric_limits<float>::min()) && this->_type != OTHER)
+                throw std::exception();
+            else
+                this->_valueFloat = static_cast<float>(this->_valueDouble);
         }
         catch(const std::exception& e)
         {
@@ -158,11 +184,12 @@ void    Convert::setValue()
 
         try
         {
-            this->_valueInt = std::stoi(this->_input, NULL, 10);
-            if (this->_valueDouble - _valueInt >= 0.5 && this->_valueInt < std::numeric_limits<int>::max())
-                this->_valueInt = this->_valueInt + 1;
-            if (this->_valueDouble - _valueInt >= 0.5 && this->_valueInt == std::numeric_limits<int>::max())
-                this->_failInt = true;
+            decimals = std::modf(this->_valueDouble, &whole);
+            if (decimals >= 0.5)
+                whole = whole + 1;
+            if (whole > std::numeric_limits<int>::max() || whole < std::numeric_limits<int>::min())
+                throw std::exception();
+            this->_valueInt = static_cast<int>(whole);
         }
         catch (std::exception& e)
         {
@@ -182,24 +209,24 @@ void    Convert::setValue()
 
 std::ostream&   operator<<(std::ostream& output, Convert& converter)
 {
-    if (isprint(converter._valueChar))
-        output << "char: '" << converter._valueChar << "'" << std::endl;
-    else if (isnan(converter._valueFloat) || converter._failChar == true)
+    if (isprint(converter.getChar()) && converter.isFail("char") != true)
+        output << "char: '" << converter.getChar() << "'" << std::endl;
+    else if (isnan(converter.getFloat()) || converter.isFail("char") == true)
         output << "char: impossible" << std::endl;
     else
         output << "char: Non displayable" <<std::endl;
 
-    if (isnan(converter._valueFloat) || converter._failInt == true)
+    if (isnan(converter.getFloat()) || converter.isFail("int") == true)
         output << "int: impossible" << std::endl;
     else
-        output << "int: " << converter._valueInt  << std::endl;
+        output << "int: " << converter.getInt()  << std::endl;
     std::cout << std::fixed << std::setprecision(1);
 
-    if (converter._failFloat == true)
+    if (converter.isFail("float") == true)
         output << "float: impossible" << std::endl;
     else
-        output << "float: " << converter._valueFloat << "f" << std::endl;
-    output << "double: " << converter._valueDouble << std::endl;
+        output << "float: " << converter.getFloat() << "f" << std::endl;
+    output << "double: " << converter.getDouble() << std::endl;
     return (output);
 }
 

@@ -17,6 +17,14 @@ class Convert
     private:
         const std::string   _input;
         int                 _type;
+        bool                _failInt;
+        bool                _failDouble;
+        bool                _failFloat;
+        bool                _failChar;
+        char                _valueChar;
+        int                 _valueInt;
+        float               _valueFloat;
+        double              _valueDouble;
 
         Convert();
         Convert(const Convert& src);
@@ -26,22 +34,18 @@ class Convert
         ~Convert();
 
         void        getType();
-        int         getType(int x) const;
         std::string getInput() const;
         void        setValue();
         bool        isInt(const std::string& str);
         bool        isFloat(const std::string& str);
         bool        isDouble(const std::string& str);
+        bool        isFail(const std::string& type);
+        char        getChar();
+        int         getInt();
+        float       getFloat();
+        double      getDouble();
 
-
-        char                _valueChar;
-        int                 _valueInt;
-        float               _valueFloat;
-        double              _valueDouble;
-        bool                _failInt;
-        bool                _failDouble;
-        bool                _failFloat;
-        bool                _failChar;
+        int                 error_num;
 };
 
 std::ostream&   operator<<(std::ostream& output, Convert& converter);

@@ -9,7 +9,7 @@ int main(int argc, char** argv)
     }
     
     Convert* converter = new Convert(argv[1]);
-    if (converter->getType(1) == ERROR)
+    if (converter->error_num != 0)
     {
         std::cerr << "ERROR: invalid input." << std::endl;
         delete converter;
@@ -17,8 +17,14 @@ int main(int argc, char** argv)
     }
 
     converter->setValue();
-    std::cout << *converter;
+    if (converter->error_num != 0)
+    {
+        delete converter;
+        return (-1);
+    }
 
+    std::cout << *converter;
     delete converter;
+
     return (0);
 }
